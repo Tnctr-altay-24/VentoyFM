@@ -145,7 +145,7 @@ static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_p
     grub_device_t dev;
     grub_fs_t fs;
     char *Label = NULL;
-    char *bs = "${bs}";
+    char *bs = ${bs};
     browser_mbuf *mbuf = (browser_mbuf *)data;
 
     (void)data;
@@ -206,7 +206,7 @@ static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_p
             "  set bs=0x%lx /\n"
             "  vt_browser_dir %s,%d ${bs} /\n"
             "}\n",
-            title, (ulong)fs, disk->name, partition->number + 1, bs);
+            title, (ulong)fs, disk->name, partition->number + 1);
     }
 
     ventoy_browser_mbuf_extend(mbuf);
