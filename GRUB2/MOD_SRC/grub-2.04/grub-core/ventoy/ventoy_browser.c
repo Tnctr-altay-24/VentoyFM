@@ -154,7 +154,7 @@ static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_p
         return 0;
     }
 
-    grub_snprintf(partname, sizeof(partname) - 1, "%s,%d", disk->name, partition->number + 1);
+    grub_snprintf(partname, sizeof(partname) - 1, "%s,%d", disk->name, partition->number + 1, "${bs}=0x%lx", (ulong)fs);
 
     dev = grub_device_open(partname);
     if (!dev)
@@ -203,7 +203,7 @@ static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_p
     {
         browser_ssprintf(mbuf, "menuentry \"%s\" --class=vtoydisk {\n"
             "  set bs=0x%lx /\n"
-            "  vt_browser_dir %s,%d %lu /\n"
+            "  vt_browser_dir %s,%d ${bs} /\n"
             "}\n",
             title, (ulong)fs, disk->name, partition->number + 1, (unsigned long)fs);
     }
