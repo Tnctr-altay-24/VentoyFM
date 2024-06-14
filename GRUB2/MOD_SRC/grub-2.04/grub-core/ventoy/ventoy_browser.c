@@ -178,22 +178,22 @@ static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_p
 
     if (g_tree_view_menu_style == 0)
     {
-        grub_snprintf(title, sizeof(title), "%-10s (%s,%s%d) [%s] %s %s", 
+        grub_snprintf(title, sizeof(title), "%-10s (%s,%s%d) [%s] %s %s set bs=0x%lx", 
             "DISK", disk->name, partition->msdostype == 0xee ? "gpt" : "msdos", 
             partition->number + 1, (Label ? Label : ""), fs->name, 
-            grub_get_human_size(partition->len << disk->log_sector_size, GRUB_HUMAN_SIZE_SHORT));
+            grub_get_human_size(partition->len << disk->log_sector_size, GRUB_HUMAN_SIZE_SHORT), (ulong)fs);
     }
     else
     {
-        grub_snprintf(title, sizeof(title), "(%s,%s%d) [%s] %s %s", 
+        grub_snprintf(title, sizeof(title), "%-10s (%s,%s%d) [%s] %s %s set bs=0x%lx", 
             disk->name, partition->msdostype == 0xee ? "gpt" : "msdos", 
             partition->number + 1, (Label ? Label : ""), fs->name, 
-            grub_get_human_size(partition->len << disk->log_sector_size, GRUB_HUMAN_SIZE_SHORT));
+            grub_get_human_size(partition->len << disk->log_sector_size, GRUB_HUMAN_SIZE_SHORT), (ulong)fs);
     }
 
     if (ventoy_get_fs_type(fs->name) >= ventoy_fs_max)
     {
-        browser_ssprintf(mbuf, (ulong)fs, "menuentry \"%s set bs=0x%lx\" --class=vtoydisk {\n"
+        browser_ssprintf(mbuf, "menuentry \"%s\" --class=vtoydisk {\n"
             "   echo \"unsupported file system type!\" \n"
             "   ventoy_pause\n"
             "}\n",
@@ -201,7 +201,7 @@ static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_p
     }
     else
     {
-        browser_ssprintf(mbuf, (ulong)fs, "menuentry \"%s set bs=0x%lx\" --class=vtoydisk {\n"
+        browser_ssprintf(mbuf, "menuentry \"%s\" --class=vtoydisk {\n"
             "  vt_browser_dir %s,%d 0x%lx /\n"
             "}\n",
             title, disk->name, partition->number + 1, (ulong)fs);
@@ -630,9 +630,9 @@ grub_err_t ventoy_cmd_browser_disk(grub_extcmd_context_t ctxt, int argc, char **
 
     if (g_tree_view_menu_style == 0)
     {
-        browser_ssprintf(&mbuf, "menuentry \"%-10s [%s]\" --class=\"vtoyret\" VTOY_RET {\n  "
+        browser_ssprintf(&mbuf, "menuentry \"configfile /grub/filemanager.cfg\" --class=\"vtoyret\" VTOY_RET {\n  "
                          "  echo 'return ...' \n}\n", "<--", 
-                         ventoy_get_vmenu_title("VTLANG_BROWER_RETURN"));        
+                         ventoy_get_vmenu_title("configfile /grub/filemanager.cfg"));        
     }
     else
     {
