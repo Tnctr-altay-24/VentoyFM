@@ -178,17 +178,17 @@ static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_p
 
     if (g_tree_view_menu_style == 0)
     {
-        grub_snprintf(title, sizeof(title), "%-10s (%s,%s%d) [%s] %s %s", 
+        grub_snprintf(title, sizeof(title), "%-10s (%s,%s%d) [%s] %s %s 0x%lx", 
             "DISK", disk->name, partition->msdostype == 0xee ? "gpt" : "msdos", 
             partition->number + 1, (Label ? Label : ""), fs->name, 
-            grub_get_human_size(partition->len << disk->log_sector_size, GRUB_HUMAN_SIZE_SHORT));
+            grub_get_human_size(partition->len << disk->log_sector_size, GRUB_HUMAN_SIZE_SHORT), (ulong)fs);
     }
     else
     {
-        grub_snprintf(title, sizeof(title), "(%s,%s%d) [%s] %s %s", 
+        grub_snprintf(title, sizeof(title), "(%s,%s%d) [%s] %s %s 0x%lx", 
             disk->name, partition->msdostype == 0xee ? "gpt" : "msdos", 
             partition->number + 1, (Label ? Label : ""), fs->name, 
-            grub_get_human_size(partition->len << disk->log_sector_size, GRUB_HUMAN_SIZE_SHORT));
+            grub_get_human_size(partition->len << disk->log_sector_size, GRUB_HUMAN_SIZE_SHORT), (ulong)fs);
     }
 
     if (ventoy_get_fs_type(fs->name) >= ventoy_fs_max)
