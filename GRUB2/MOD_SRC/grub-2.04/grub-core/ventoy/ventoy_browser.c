@@ -178,17 +178,17 @@ static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_p
 
     if (g_tree_view_menu_style == 0)
     {
-        grub_snprintf(title, sizeof(title), "%-10s (%s,%s%d) [%s] %s %s 0x%lx", 
+        grub_snprintf(title, sizeof(title), "%-10s (%s,%s%d) [%s] %s %s", 
             "DISK", disk->name, partition->msdostype == 0xee ? "gpt" : "msdos", 
             partition->number + 1, (Label ? Label : ""), fs->name, 
-            grub_get_human_size(partition->len << disk->log_sector_size, GRUB_HUMAN_SIZE_SHORT), (ulong)fs);
+            grub_get_human_size(partition->len << disk->log_sector_size, GRUB_HUMAN_SIZE_SHORT));
     }
     else
     {
-        grub_snprintf(title, sizeof(title), "(%s,%s%d) [%s] %s %s 0x%lx", 
+        grub_snprintf(title, sizeof(title), "(%s,%s%d) [%s] %s %s", 
             disk->name, partition->msdostype == 0xee ? "gpt" : "msdos", 
             partition->number + 1, (Label ? Label : ""), fs->name, 
-            grub_get_human_size(partition->len << disk->log_sector_size, GRUB_HUMAN_SIZE_SHORT), (ulong)fs);
+            grub_get_human_size(partition->len << disk->log_sector_size, GRUB_HUMAN_SIZE_SHORT));
     }
 
     if (ventoy_get_fs_type(fs->name) >= ventoy_fs_max)
@@ -201,11 +201,10 @@ static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_p
     }
     else
     {
-        browser_ssprintf(mbuf, "menuentry \"%s\" --class=vtoydisk {\n"
-            "  set bs=0x%lx /\n"
-            "  vt_browser_dir %s,%d ${bs} /\n"
+        browser_ssprintf(mbuf, "menuentry \"%s\ ${2}=0x%lx" --class=vtoydisk {\n"
+            "  vt_browser_dir %s,%d 0x%lx /\n"
             "}\n",
-            title, (ulong)fs, disk->name, partition->number + 1);
+            title, (ulong)fs, disk->name, partition->number + 1, (ulong)fs);
     }
 
     ventoy_browser_mbuf_extend(mbuf);
