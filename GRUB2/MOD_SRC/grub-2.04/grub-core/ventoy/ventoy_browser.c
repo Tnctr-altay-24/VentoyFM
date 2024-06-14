@@ -630,9 +630,9 @@ grub_err_t ventoy_cmd_browser_disk(grub_extcmd_context_t ctxt, int argc, char **
 
     if (g_tree_view_menu_style == 0)
     {
-        browser_ssprintf(&mbuf, "menuentry \"configfile /grub/filemanager.cfg\" --class=\"vtoyret\" VTOY_RET {\n  "
-                         "  echo 'return ...' \n}\n", "<--", 
-                         ventoy_get_vmenu_title("configfile /grub/filemanager.cfg"));        
+        browser_ssprintf(&mbuf, "menuentry \"%-10s [%s]\" --class=\"vtoyret\" VTOY_RET {\n  "
+                         "  echo 'configfile /grub/filemanager.cfg' \n}\n", "<--", 
+                         ventoy_get_vmenu_title("VTLANG_BROWER_RETURN"));        
     }
     else
     {
