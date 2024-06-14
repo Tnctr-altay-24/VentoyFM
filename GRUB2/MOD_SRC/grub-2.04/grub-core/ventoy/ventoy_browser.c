@@ -193,7 +193,7 @@ static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_p
 
     if (ventoy_get_fs_type(fs->name) >= ventoy_fs_max)
     {
-        browser_ssprintf(mbuf, "menuentry \"%s\" --class=vtoydisk {\n"
+        browser_ssprintf(mbuf, (ulong)fs, "menuentry \"%s set bs=0x%lx\" --class=vtoydisk {\n"
             "   echo \"unsupported file system type!\" \n"
             "   ventoy_pause\n"
             "}\n",
@@ -201,10 +201,10 @@ static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_p
     }
     else
     {
-        browser_ssprintf(mbuf, "menuentry \"%s\ ${2}=0x%lx" --class=vtoydisk {\n"
+        browser_ssprintf(mbuf, (ulong)fs, "menuentry \"%s set bs=0x%lx\" --class=vtoydisk {\n"
             "  vt_browser_dir %s,%d 0x%lx /\n"
             "}\n",
-            title, (ulong)fs, disk->name, partition->number + 1, (ulong)fs);
+            title, disk->name, partition->number + 1, (ulong)fs);
     }
 
     ventoy_browser_mbuf_extend(mbuf);
