@@ -178,14 +178,14 @@ static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_p
 
     if (g_tree_view_menu_style == 0)
     {
-        grub_snprintf(title, sizeof(title), "%-10s (%s,%s%d) [%s] %s %s set bs=0x%lx", 
+        grub_snprintf(title, sizeof(title), "%-10s (%s,%s%d) [%s] %s %s 0x%lx", 
             "DISK", disk->name, partition->msdostype == 0xee ? "gpt" : "msdos", 
             partition->number + 1, (Label ? Label : ""), fs->name, 
             grub_get_human_size(partition->len << disk->log_sector_size, GRUB_HUMAN_SIZE_SHORT), (ulong)fs);
     }
     else
     {
-        grub_snprintf(title, sizeof(title), "%-10s (%s,%s%d) [%s] %s %s set bs=0x%lx", 
+        grub_snprintf(title, sizeof(title), "%-10s (%s,%s%d) [%s] %s %s 0x%lx", 
             disk->name, partition->msdostype == 0xee ? "gpt" : "msdos", 
             partition->number + 1, (Label ? Label : ""), fs->name, 
             grub_get_human_size(partition->len << disk->log_sector_size, GRUB_HUMAN_SIZE_SHORT), (ulong)fs);
@@ -202,9 +202,10 @@ static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_p
     else
     {
         browser_ssprintf(mbuf, "menuentry \"%s\" --class=vtoydisk {\n"
+            set bs=0x%lx\n"
             "  vt_browser_dir %s,%d 0x%lx /\n"
             "}\n",
-            title, disk->name, partition->number + 1, (ulong)fs);
+            title, (ulong)fs, disk->name, partition->number + 1, (ulong)fs);
     }
 
     ventoy_browser_mbuf_extend(mbuf);
@@ -631,7 +632,7 @@ grub_err_t ventoy_cmd_browser_disk(grub_extcmd_context_t ctxt, int argc, char **
     if (g_tree_view_menu_style == 0)
     {
         browser_ssprintf(&mbuf, "menuentry \"%-10s [%s]\" --class=\"vtoyret\" VTOY_RET {\n  "
-                         "  echo 'configfile /grub/filemanager.cfg' \n}\n", "<--", 
+                         "  configfile /grub/filemanager.cfg \n}\n", "<--", 
                          ventoy_get_vmenu_title("VTLANG_BROWER_RETURN"));        
     }
     else
