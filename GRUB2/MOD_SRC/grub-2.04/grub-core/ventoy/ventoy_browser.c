@@ -191,13 +191,16 @@ static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_p
             grub_get_human_size(partition->len << disk->log_sector_size, GRUB_HUMAN_SIZE_SHORT), (ulong)fs);
     }
 
+    if (g_tree_view_menu_style == 0)
+    {
+        two=usb
+    }
+    else
+    {
+        two=hdd
+    }
+    
     if (ventoy_get_fs_type(fs->name) >= ventoy_fs_max)
-        if (g_tree_view_menu_style == 0)
-        {
-            set two="usb"
-        else
-            set two="hdd"
-        }
     {
         browser_ssprintf(mbuf, "menuentry \"%s\" --class=${two} {\n"
             "   echo \"unsupported file system type!\" \n"
