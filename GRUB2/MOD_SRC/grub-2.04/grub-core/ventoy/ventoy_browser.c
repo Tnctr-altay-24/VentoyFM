@@ -192,7 +192,7 @@ static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_p
     }
 
     if (ventoy_get_fs_type(fs->name) >= ventoy_fs_max)
-        if "(${device})" = "(hd0,msdos1)" -o "(${device})" = "(hd0,msdos2)"
+        if (g_tree_view_menu_style == 0)
         {
             set two="usb"
         else
@@ -647,8 +647,7 @@ grub_err_t ventoy_cmd_browser_disk(grub_extcmd_context_t ctxt, int argc, char **
                          "  echo 'return ...' \n}\n", 
                          ventoy_get_vmenu_title("VTLANG_BROWER_RETURN"));      
     }
-    set vtoy_iso_part="(hd0,1)"
-    set ventoy_img_count=0
+    ventoy_img_count=0
     vt_list_img $vtoy_iso_part ventoy_img_count
 
     grub_disk_dev_iterate(ventoy_browser_iterate_disk, &mbuf);
