@@ -192,8 +192,14 @@ static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_p
     }
 
     if (ventoy_get_fs_type(fs->name) >= ventoy_fs_max)
+        if "(${device})" = "(hd0,msdos1)" -o "(${device})" = "(hd0,msdos2)"
+        {
+            set two="usb"
+        else
+            set two="hdd"
+        }
     {
-        browser_ssprintf(mbuf, "menuentry \"%s\" --class=vtoydisk {\n"
+        browser_ssprintf(mbuf, "menuentry \"%s\" --class=${two} {\n"
             "   echo \"unsupported file system type!\" \n"
             "   ventoy_pause\n"
             "}\n",
@@ -201,7 +207,7 @@ static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_p
     }
     else
     {
-        browser_ssprintf(mbuf, "menuentry \"%s\" --class=vtoydisk {\n"
+        browser_ssprintf(mbuf, "menuentry \"%s\" --class=${two} {\n"
             "  set bs=0x%lx\n"
             "  vt_browser_dir %s,%d 0x%lx /\n"
             "}\n",
@@ -641,6 +647,9 @@ grub_err_t ventoy_cmd_browser_disk(grub_extcmd_context_t ctxt, int argc, char **
                          "  echo 'return ...' \n}\n", 
                          ventoy_get_vmenu_title("VTLANG_BROWER_RETURN"));      
     }
+    set vtoy_iso_part="(hd0,1)"
+    set ventoy_img_count=0
+    vt_list_img $vtoy_iso_part ventoy_img_count
 
     grub_disk_dev_iterate(ventoy_browser_iterate_disk, &mbuf);
 
