@@ -191,15 +191,6 @@ static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_p
             grub_get_human_size(partition->len << disk->log_sector_size, GRUB_HUMAN_SIZE_SHORT), (ulong)fs);
     }
 
-    if (g_tree_view_menu_style == 0)
-    {
-        two=usb
-    }
-    else
-    {
-        two=hdd
-    }
-    
     if (ventoy_get_fs_type(fs->name) >= ventoy_fs_max)
     {
         browser_ssprintf(mbuf, "menuentry \"%s\" --class=${two} {\n"
@@ -614,6 +605,8 @@ grub_err_t ventoy_cmd_browser_dir(grub_extcmd_context_t ctxt, int argc, char **a
         }
     }
     g_browser_list = NULL;
+    ventoy_img_count=0;
+    vt_list_img $vtoy_iso_part ventoy_img_count;
     
     grub_snprintf(cfgfile, sizeof(cfgfile), "configfile mem:0x%lx:size:%d", (ulong)mbuf.buf, mbuf.pos);
     grub_script_execute_sourcecode(cfgfile);
@@ -650,8 +643,6 @@ grub_err_t ventoy_cmd_browser_disk(grub_extcmd_context_t ctxt, int argc, char **
                          "  echo 'return ...' \n}\n", 
                          ventoy_get_vmenu_title("VTLANG_BROWER_RETURN"));      
     }
-    ventoy_img_count=0
-    vt_list_img $vtoy_iso_part ventoy_img_count
 
     grub_disk_dev_iterate(ventoy_browser_iterate_disk, &mbuf);
 
