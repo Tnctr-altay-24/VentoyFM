@@ -19,8 +19,8 @@ jobs:
         sudo apt-get upgrade -y
         sudo apt-get dist-upgrade -y
         sudo apt-get install -y docker.io docker-compose
-    - name: Run docker-compose up
-      run: docker-compose up
+    - name: Run docker compose up
+      run: docker compose up
     - uses: actions/upload-artifact@v4
       with:
         name: ventoy-windows
