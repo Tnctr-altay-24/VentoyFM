@@ -12,7 +12,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Set up Docker Compose
     - uses: actions/checkout@v4
     - name: Run docker-compose up
       run: docker-compose up
