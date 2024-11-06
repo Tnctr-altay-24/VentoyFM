@@ -15,7 +15,7 @@ jobs:
     - uses: actions/checkout@v4
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
-    - name: Run docker-compose up
+    - name: Run docker compose up
       run: docker-compose up
     - uses: actions/upload-artifact@v4
       with:
