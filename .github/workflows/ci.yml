@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Set up Docker
+    - name: Update and upgrade system packages
       run: |
         sudo apt-get update -y
         sudo apt-get upgrade -y
