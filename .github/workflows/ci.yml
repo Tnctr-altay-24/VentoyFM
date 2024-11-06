@@ -13,14 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Update and upgrade system packages
-      run: |
-        sudo apt-get update -y
-        sudo apt-get upgrade -y
-        sudo apt-get dist-upgrade -y
-        sudo apt-get install -y docker.io docker-compose
-    - name: Run docker compose up
-      run: docker compose up --force-recreate
+    - name: Checkout
+      run: docker compose up
     - uses: actions/upload-artifact@v4
       with:
         name: ventoy-windows
