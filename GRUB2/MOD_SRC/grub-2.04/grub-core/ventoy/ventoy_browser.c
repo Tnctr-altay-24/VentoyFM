@@ -196,6 +196,9 @@ static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_p
         browser_ssprintf(mbuf, "menuentry \"%s\" --class=vtoydisk {\n"
             "   echo \"unsupported file system type!\" \n"
             "   ventoy_pause\n"
+            "   set $vtoy_iso_part=(hd0,1)
+            "   set ventoy_img_count=0\n"
+            "   vt_list_img $vtoy_iso_part ventoy_img_count\n"
             "}\n",
             title);
     }
