@@ -202,7 +202,7 @@ static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_p
     else
     {
         browser_ssprintf(mbuf, "menuentry \"%s\" --class=vtoydisk {\n"
-            "   set vtoy_iso_part=(hd0,1)
+            "   set vtoy_iso_part=(hd0,1)"
             "   set ventoy_img_count=0\n"
             "   vt_list_img vtoy_iso_part ventoy_img_count\n"
             "  vt_browser_dir %s,%d 0x%lx /\n"
