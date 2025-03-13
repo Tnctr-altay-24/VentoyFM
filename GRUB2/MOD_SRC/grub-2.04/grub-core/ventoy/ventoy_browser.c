@@ -203,9 +203,6 @@ static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_p
     {
         browser_ssprintf(mbuf, "menuentry \"%s\" --class=vtoydisk {\n"
             "  vt_browser_dir %s,%d 0x%lx /\n"
-            "   set vtoy_iso_part=(hd0,1)"
-            "   set ventoy_img_count=0\n"
-            "   vt_list_img vtoy_iso_part ventoy_img_count\n"
             "}\n",
             title, disk->name, partition->number + 1, (ulong)fs);
     }
@@ -652,4 +649,3 @@ grub_err_t ventoy_cmd_browser_disk(grub_extcmd_context_t ctxt, int argc, char **
     ventoy_browser_mbuf_free(&mbuf);
     VENTOY_CMD_RETURN(GRUB_ERR_NONE);
 }
-
