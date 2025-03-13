@@ -34,8 +34,8 @@
 #include <grub/net.h>
 #include <grub/time.h>
 #include <grub/ventoy.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include <grub/stdio.h>
+#include <grub/stdlib.h>
 #include "ventoy_def.h"
 
 GRUB_MOD_LICENSE ("GPLv3+");
