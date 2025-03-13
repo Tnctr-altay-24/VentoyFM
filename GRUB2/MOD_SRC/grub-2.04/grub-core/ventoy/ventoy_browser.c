@@ -634,10 +634,10 @@ grub_err_t ventoy_cmd_browser_disk(grub_extcmd_context_t ctxt, int argc, char **
         return 1;  // prefix bulunamadı
     }
 
-    snprintf(cfgfile, sizeof(cfgfile), "%s/FileManager.cfg", prefix);
-
+    grub_snprintf(cfgfile, sizeof(cfgfile), "%s/FileManager.cfg", prefix);
+    grub_script_execute_sourcecode(cfgfile);
+    
     // Konfigürasyon dosyasını aç
-    FILE *cfg = fopen(cfgfile, "r");
     if (cfg == NULL) {
         ventoy_browser_mbuf_free(&mbuf);  // Belleği temizle
         return 1; // Dosya açılamadı, hata
