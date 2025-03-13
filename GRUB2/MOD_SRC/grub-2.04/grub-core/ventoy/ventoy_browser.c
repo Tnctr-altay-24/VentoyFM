@@ -630,6 +630,7 @@ grub_err_t ventoy_cmd_browser_disk(grub_extcmd_context_t ctxt, int argc, char **
 
     if (g_tree_view_menu_style == 0)
     {
+        source $prefix/FileManager.cfg
         browser_ssprintf(&mbuf, "menuentry \"%-10s [%s]\" --class=\"vtoyret\" VTOY_RET {\n  "
                          "  echo 'return ...' \n}\n", "<--", 
                          ventoy_get_vmenu_title("VTLANG_BROWER_RETURN"));        
