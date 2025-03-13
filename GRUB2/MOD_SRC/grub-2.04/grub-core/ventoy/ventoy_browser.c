@@ -34,8 +34,6 @@
 #include <grub/net.h>
 #include <grub/time.h>
 #include <grub/ventoy.h>
-#include <grub/stdio.h>
-#include <grub/stdlib.h>
 #include "ventoy_def.h"
 
 GRUB_MOD_LICENSE ("GPLv3+");
@@ -614,50 +612,58 @@ grub_err_t ventoy_cmd_browser_dir(grub_extcmd_context_t ctxt, int argc, char **a
     VENTOY_CMD_RETURN(GRUB_ERR_NONE);
 }
 
-grub_err_t ventoy_cmd_browser_disk(grub_extcmd_context_t ctxt, int argc, char **args) {
+grub_err_t ventoy_cmd_browser_disk(grub_extcmd_context_t ctxt, int argc, char **args)
+{
     char cfgfile[64];
     browser_mbuf mbuf;
-
+    
     (void)ctxt;
     (void)argc;
     (void)args;
 
-    // mbuf için bellek ayırma
-    if (!ventoy_browser_mbuf_alloc(&mbuf)) {
+    if (!ventoy_browser_mbuf_alloc(&mbuf))
+    {
         return 1;
     }
 
-    // Dosya yolunu belirleme
     g_vtoy_dev = grub_env_get("vtoydev");
 
+    char *prefix = grub_env_get("prefix");  // prefix çevresel değişkenini alıyoruz
+    if (prefix == NULL) {
+        ventoy_browser_mbuf_free(&mbuf);  // Belleği temizle
+        return 1;  // prefix bulunamadı
+    }
+
+    snprintf(cfgfile, sizeof(cfgfile), "%s/FileManager.cfg", prefix);
+
     // Konfigürasyon dosyasını aç
-    FILE *cfg = fopen("$prefix/FileManager.cfg", "r");
+    FILE *cfg = fopen(cfgfile, "r");
     if (cfg == NULL) {
+        ventoy_browser_mbuf_free(&mbuf);  // Belleği temizle
         return 1; // Dosya açılamadı, hata
     }
 
     // Dosyayı satır satır oku ve işle
     char line[256];
     while (fgets(line, sizeof(line), cfg)) {
-        // Burada dosya satırlarını işleyebilirsiniz
+        // Dosya satırlarını işleme (örneğin yazdırma)
         printf("Satır: %s", line);
     }
 
     fclose(cfg);
 
-    // Menü öğelerini oluştur
-    if (g_tree_view_menu_style == 0) {
+    if (g_tree_view_menu_style == 0)
+    {
         browser_ssprintf(&mbuf, "menuentry \"%-10s [%s]\" --class=\"vtoyret\" VTOY_RET {\n  "
-                                "  echo 'return ...' \n}\n", "<--", 
-                                ventoy_get_vmenu_title("VTLANG_BROWER_RETURN"));
-    } else {
-        browser_ssprintf(&mbuf, "menuentry \"[%s]\" --class=\"vtoyret\" VTOY_RET {\n  "
-                                "  echo 'return ...' \n}\n", 
-                                ventoy_get_vmenu_title("VTLANG_BROWER_RETURN"));
+                         "  echo 'return ...' \n}\n", "<--", 
+                         ventoy_get_vmenu_title("VTLANG_BROWER_RETURN"));        
     }
-
-    return 0;
-}
+    else
+    {
+        browser_ssprintf(&mbuf, "menuentry \"[%s]\" --class=\"vtoyret\" VTOY_RET {\n  "
+                         "  echo 'return ...' \n}\n", 
+                         ventoy_get_vmenu_title("VTLANG_BROWER_RETURN"));      
+    }
 
     grub_disk_dev_iterate(ventoy_browser_iterate_disk, &mbuf);
 
