@@ -628,29 +628,8 @@ grub_err_t ventoy_cmd_browser_disk(grub_extcmd_context_t ctxt, int argc, char **
 
     g_vtoy_dev = grub_env_get("vtoydev");
 
-    char *prefix = grub_env_get("prefix");  // prefix çevresel değişkenini alıyoruz
-    if (prefix == NULL) {
-        ventoy_browser_mbuf_free(&mbuf);  // Belleği temizle
-        return 1;  // prefix bulunamadı
-    }
-
     grub_snprintf(cfgfile, sizeof(cfgfile), "%s/FileManager.cfg", prefix);
     grub_script_execute_sourcecode(cfgfile);
-    
-    // Konfigürasyon dosyasını aç
-    if (cfg == NULL) {
-        ventoy_browser_mbuf_free(&mbuf);  // Belleği temizle
-        return 1; // Dosya açılamadı, hata
-    }
-
-    // Dosyayı satır satır oku ve işle
-    char line[256];
-    while (fgets(line, sizeof(line), cfg)) {
-        // Dosya satırlarını işleme (örneğin yazdırma)
-        printf("Satır: %s", line);
-    }
-
-    fclose(cfg);
 
     if (g_tree_view_menu_style == 0)
     {
