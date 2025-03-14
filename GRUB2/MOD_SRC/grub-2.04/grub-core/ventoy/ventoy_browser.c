@@ -621,15 +621,15 @@ grub_err_t ventoy_cmd_browser_disk(grub_extcmd_context_t ctxt, int argc, char **
     (void)argc;
     (void)args;
 
+    grub_snprintf(cfgfile, "configfile $prefix/FileManager.cfg");
+    grub_script_execute_sourcecode(cfgfile);
+
     if (!ventoy_browser_mbuf_alloc(&mbuf))
     {
         return 1;
     }
 
     g_vtoy_dev = grub_env_get("vtoydev");
-
-    grub_snprintf(cfgfile, "configfile $prefix/FileManager.cfg");
-    grub_script_execute_sourcecode(cfgfile);
 
     if (g_tree_view_menu_style == 0)
     {
