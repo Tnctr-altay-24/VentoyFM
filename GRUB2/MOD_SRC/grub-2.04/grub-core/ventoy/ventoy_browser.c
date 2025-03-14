@@ -646,8 +646,8 @@ grub_err_t ventoy_cmd_browser_disk(grub_extcmd_context_t ctxt, int argc, char **
 
     grub_disk_dev_iterate(ventoy_browser_iterate_disk, &mbuf);
 
-    grub_snprintf(cfgfile, sizeof(cfgfile), "configfile mem:0x%lx:size:%d", (ulong)mbuf.buf, mbuf.pos);
-    grub_script_execute_sourcecode(cfgfile);
+    //grub_snprintf(cfgfile, sizeof(cfgfile), "configfile mem:0x%lx:size:%d", (ulong)mbuf.buf, mbuf.pos);
+    //grub_script_execute_sourcecode(cfgfile);
 
     ventoy_browser_mbuf_free(&mbuf);
     VENTOY_CMD_RETURN(GRUB_ERR_NONE);
