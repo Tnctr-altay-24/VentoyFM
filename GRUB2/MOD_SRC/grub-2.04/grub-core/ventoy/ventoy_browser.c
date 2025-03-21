@@ -622,10 +622,7 @@ grub_err_t ventoy_cmd_browser_disk(grub_extcmd_context_t ctxt, int argc, char **
     (void)argc;
     (void)args;
 
-    if (g_tree_view_menu_style == 0)
-    {
-        browser_ssprintf(&mbuf, "source $prefix/FileManager.cfg");
-    }
+    browser_ssprintf(&mbuf, "source $prefix/FileManager.cfg");
 
     grub_disk_dev_iterate(ventoy_browser_iterate_disk, &mbuf);
 
