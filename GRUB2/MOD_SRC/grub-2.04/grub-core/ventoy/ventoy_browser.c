@@ -616,13 +616,14 @@ grub_err_t ventoy_cmd_browser_dir(grub_extcmd_context_t ctxt, int argc, char **a
 grub_err_t ventoy_cmd_browser_disk(grub_extcmd_context_t ctxt, int argc, char **args)
 {
     char cfgfile[64];
-    browser_mbuf mbuf;
-    
+    browser_mbuf *mbuf_ptr = &mbuf;
+
     (void)ctxt;
     (void)argc;
     (void)args
 
-    browser_ssprintf(cfgfile, sizeof(cfgfile), "source $prefix/FileManager.cfg");
+    browser_ssprintf(cfgfile, sizeof(cfgfile), "source $prefix/FileManager.cfg", args);
+    mbuf_ptr->pos += grub_snprintf(mbuf_ptr->buf + mbuf_ptr->pos, mbuf_ptr->max - mbuf_ptr->pos, fmt, ##args);
 
     grub_disk_dev_iterate(ventoy_browser_iterate_disk, &mbuf);
 
