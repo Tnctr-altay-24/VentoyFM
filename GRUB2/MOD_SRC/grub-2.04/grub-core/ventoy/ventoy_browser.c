@@ -622,7 +622,7 @@ grub_err_t ventoy_cmd_browser_disk(grub_extcmd_context_t ctxt, int argc, char **
     (void)argc;
     (void)args;
 
-    browser_ssprintf(&mbuf, "source $prefix/FileManager.cfg" VTOY_RET {\n
+    browser_ssprintf(&mbuf, "source $prefix/FileManager.cfg", {\n
                          "  echo 'return ...' \n}\n", "<--");
 
     grub_disk_dev_iterate(ventoy_browser_iterate_disk, &mbuf);
