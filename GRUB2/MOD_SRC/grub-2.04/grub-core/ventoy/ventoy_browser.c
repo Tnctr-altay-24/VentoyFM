@@ -203,9 +203,9 @@ static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_p
     {
         browser_ssprintf(mbuf, "menuentry \"%s\" --class=vtoydisk {\n"
             "  set bs=0x%lx"
-            "  vt_browser_dir %s,%d ${bs} /\n"
+            "  vt_browser_dir %s,%d 0x%lx /\n"
             "}\n",
-            title, (ulong)fs, disk->name, partition->number + 1);
+            title, (ulong)fs, disk->name, partition->number + 1, (ulong)fs);
     }
 
     ventoy_browser_mbuf_extend(mbuf);
