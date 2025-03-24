@@ -205,7 +205,7 @@ static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_p
             "  set bs=0x%lx"
             "  vt_browser_dir %s,%d ${bs} /\n"
             "}\n",
-            title, (ulong)fs, disk->name, partition->number + 1, title);
+            title, (ulong)fs, disk->name, partition->number + 1, (ulong)fs);
     }
 
     ventoy_browser_mbuf_extend(mbuf);
@@ -629,8 +629,9 @@ grub_err_t ventoy_cmd_browser_disk(grub_extcmd_context_t ctxt, int argc, char **
     // g_tree_view_menu_style değişkenine göre bir işlem yapıyoruz
     if (g_tree_view_menu_style == 0)
     {
-        // browser_ssprintf veya grub_snprintf fonksiyonlarından birini kullanabilirsiniz
-        browser_ssprintf(cfgfile, sizeof(cfgfile), "source $prefix/FileManager.cfg", args);
+        // args[0] gibi bir parametreyi kullanıyorsanız doğru şekilde geçirmelisiniz
+        // Burada args[0] gibi formatla bir şey ekliyoruz, uygun şekilde formatlanmış bir string kullanıyoruz
+        grub_snprintf(cfgfile, sizeof(cfgfile), "source $prefix/FileManager.cfg");
     }
 
     // Disk iterasyonu başlatıyoruz
