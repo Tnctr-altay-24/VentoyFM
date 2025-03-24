@@ -622,7 +622,12 @@ grub_err_t ventoy_cmd_browser_disk(grub_extcmd_context_t ctxt, int argc, char **
     (void)argc;
     (void)args;
 
-    grub_snprintf(cfgfile, sizeof(cfgfile), "source ${prefix}/FileManager.cfg");
+    g_vtoy_dev = grub_env_get("vtoydev");
+
+    if (g_tree_view_menu_style == 0)
+    {
+        grub_snprintf(cfgfile, sizeof(cfgfile), "configfile ${prefix}/FileManager.cfg");
+    }
 
     grub_disk_dev_iterate(ventoy_browser_iterate_disk, &mbuf);
 
