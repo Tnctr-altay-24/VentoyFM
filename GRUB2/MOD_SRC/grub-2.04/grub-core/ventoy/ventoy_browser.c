@@ -618,34 +618,19 @@ grub_err_t ventoy_cmd_browser_disk(grub_extcmd_context_t ctxt, int argc, char **
     char cfgfile[64];
     browser_mbuf mbuf;
 
-    // Parametreleri kullanmıyoruz, ancak gereksiz uyarılar için (void) ekliyoruz
     (void)ctxt;
     (void)argc;
     (void)args;
 
-    // Global değişkeni alıyoruz
-    g_vtoy_dev = grub_env_get("vtoydev");
+    grub_snprintf(cfgfile, sizeof(cfgfile), "source $prefix/FileManager.cfg");
 
-    // g_tree_view_menu_style değişkenine göre bir işlem yapıyoruz
-    if (g_tree_view_menu_style == 0)
-    {
-        // args[0] gibi bir parametreyi kullanıyorsanız doğru şekilde geçirmelisiniz
-        // Burada args[0] gibi formatla bir şey ekliyoruz, uygun şekilde formatlanmış bir string kullanıyoruz
-        grub_snprintf(cfgfile, sizeof(cfgfile), "source $prefix/FileManager.cfg");
-    }
-
-    // Disk iterasyonu başlatıyoruz
     grub_disk_dev_iterate(ventoy_browser_iterate_disk, &mbuf);
 
-    // Memori adresi ve boyutunu kullanarak scripti oluşturuyoruz
     grub_snprintf(cfgfile, sizeof(cfgfile), "configfile mem:0x%lx:size:%d", (unsigned long)mbuf.buf, mbuf.pos);
 
-    // Scripti çalıştırıyoruz
     grub_script_execute_sourcecode(cfgfile);
 
-    // mbuf belleğini serbest bırakıyoruz
     ventoy_browser_mbuf_free(&mbuf);
 
-    // Başarılı işlem sonucu döndürüyoruz
     VENTOY_CMD_RETURN(GRUB_ERR_NONE);
 }
