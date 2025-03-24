@@ -205,7 +205,7 @@ static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_p
             "  set bs=0x%lx"
             "  vt_browser_dir %s,%d ${bs} /\n"
             "}\n",
-            title, (ulong)fs, disk->name, partition->number + 1, bs);
+            title, (ulong)fs, disk->name, partition->number + 1, title);
     }
 
     ventoy_browser_mbuf_extend(mbuf);
@@ -617,23 +617,34 @@ grub_err_t ventoy_cmd_browser_disk(grub_extcmd_context_t ctxt, int argc, char **
 {
     char cfgfile[64];
     browser_mbuf mbuf;
-    
+
+    // Parametreleri kullanmıyoruz, ancak gereksiz uyarılar için (void) ekliyoruz
     (void)ctxt;
     (void)argc;
     (void)args;
 
+    // Global değişkeni alıyoruz
     g_vtoy_dev = grub_env_get("vtoydev");
 
+    // g_tree_view_menu_style değişkenine göre bir işlem yapıyoruz
     if (g_tree_view_menu_style == 0)
     {
-        browser_ssprintf(cfgfile, sizeof(cfgfile), "source $prefix/FileManager.cfg", args);        
+        // browser_ssprintf veya grub_snprintf fonksiyonlarından birini kullanabilirsiniz
+        browser_ssprintf(cfgfile, sizeof(cfgfile), "source $prefix/FileManager.cfg", args);
     }
 
+    // Disk iterasyonu başlatıyoruz
     grub_disk_dev_iterate(ventoy_browser_iterate_disk, &mbuf);
 
-    grub_snprintf(cfgfile, sizeof(cfgfile), "configfile mem:0x%lx:size:%d", (ulong)mbuf.buf, mbuf.pos);
+    // Memori adresi ve boyutunu kullanarak scripti oluşturuyoruz
+    grub_snprintf(cfgfile, sizeof(cfgfile), "configfile mem:0x%lx:size:%d", (unsigned long)mbuf.buf, mbuf.pos);
+
+    // Scripti çalıştırıyoruz
     grub_script_execute_sourcecode(cfgfile);
 
+    // mbuf belleğini serbest bırakıyoruz
     ventoy_browser_mbuf_free(&mbuf);
+
+    // Başarılı işlem sonucu döndürüyoruz
     VENTOY_CMD_RETURN(GRUB_ERR_NONE);
 }
