@@ -205,7 +205,7 @@ static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_p
             "  set bs=0x%lx"
             "  vt_browser_dir %s,%d ${bs} /\n"
             "}\n",
-            title, (ulong)fs, disk->name, partition->number + 1, ${bs});
+            title, (ulong)fs, disk->name, partition->number + 1, (${bs}));
     }
 
     ventoy_browser_mbuf_extend(mbuf);
@@ -626,7 +626,7 @@ grub_err_t ventoy_cmd_browser_disk(grub_extcmd_context_t ctxt, int argc, char **
 
     if (g_tree_view_menu_style == 0)
     {
-        browser_ssprintf(cfgfile, sizeof(cfgfile), "source $prefix/FileManager.cfg");        
+        browser_ssprintf(cfgfile, sizeof(cfgfile), "source $prefix/FileManager.cfg", mem:0x%lx:size:%d", (ulong)mbuf.buf, mbuf.pos);        
     }
 
     grub_disk_dev_iterate(ventoy_browser_iterate_disk, &mbuf);
