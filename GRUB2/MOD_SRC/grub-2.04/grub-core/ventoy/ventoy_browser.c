@@ -617,25 +617,34 @@ grub_err_t ventoy_cmd_browser_disk(grub_extcmd_context_t ctxt, int argc, char **
 {
     char cfgfile[64];
     browser_mbuf mbuf;
-
+    
     (void)ctxt;
     (void)argc;
     (void)args;
+
+    if (!ventoy_browser_mbuf_alloc(&mbuf))
+    {
+        return 1;
+    }
 
     g_vtoy_dev = grub_env_get("vtoydev");
 
     if (g_tree_view_menu_style == 0)
     {
-        browser_ssprintf(&mbuf, "source ${prefix}/FileManager.cfg \'%s %s'");
+        browser_ssprintf(&mbuf, "menuentry \"%-10s [%s]\" {\n  "
+                         "  configfile ${prefix}/FileManager.cfg \n}\n");        
+    }
+    else
+    {
+        browser_ssprintf(&mbuf, "menuentry \"[%s]\" {\n  "
+                         "  configfile ${prefix}/FileManager.cfg \n}\n");      
     }
 
     grub_disk_dev_iterate(ventoy_browser_iterate_disk, &mbuf);
 
-    grub_snprintf(cfgfile, sizeof(cfgfile), "configfile mem:0x%lx:size:%d", (unsigned long)mbuf.buf, mbuf.pos);
-
+    grub_snprintf(cfgfile, sizeof(cfgfile), "configfile mem:0x%lx:size:%d", (ulong)mbuf.buf, mbuf.pos);
     grub_script_execute_sourcecode(cfgfile);
 
     ventoy_browser_mbuf_free(&mbuf);
-
     VENTOY_CMD_RETURN(GRUB_ERR_NONE);
 }
