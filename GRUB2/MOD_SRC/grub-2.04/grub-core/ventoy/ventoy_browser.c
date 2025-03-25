@@ -631,11 +631,9 @@ grub_err_t ventoy_cmd_browser_disk(grub_extcmd_context_t ctxt, int argc, char **
 
     if (g_tree_view_menu_style == 0)
 {
-    browser_ssprintf(&mbuf, "menuentry \"%-10s [%s]\" {\n  configfile ${prefix}/FileManager.cfg \n}\n", "some_text", "some_text");
-}
-else
-{
-    browser_ssprintf(&mbuf, "menuentry \"[%s]\" {\n  configfile ${prefix}/FileManager.cfg \n}\n", "some_text");
+    browser_ssprintf(&mbuf, "menuentry \"%-10s [%s]\" {\n  configfile ${prefix}/FileManager.cfg \n}\n",
+        "FileManager.cfg Dosyasını çalıştır", set bs=0x%lx,
+        title, (ulong)fs);
 }
 
     grub_disk_dev_iterate(ventoy_browser_iterate_disk, &mbuf);
