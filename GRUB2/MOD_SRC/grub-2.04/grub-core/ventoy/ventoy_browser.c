@@ -192,22 +192,23 @@ static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_p
     }
 
     if (ventoy_get_fs_type(fs->name) >= ventoy_fs_max)
-    {
-        browser_ssprintf(mbuf, "menuentry \"%s\" --class=vtoydisk {\n"
-            "   echo \"unsupported file system type!\" \n"
-            "   ventoy_pause\n"
-            "}\n",
-            title);
-    }
-    else
-    {
-        browser_ssprintf(mbuf, "menuentry \"%s\" --class=vtoydisk {\n"
-            "  vt_browser_dir %s,%d 0x%lx /\n"
-            "}\n",
-            title, (ulong)fs, disk->name, partition->number + 1, (ulong)fs);
-        grub_snprintf(buf), "set bs=0x%lx", grub_env_get("bs")
-    }
-
+{
+    browser_ssprintf(mbuf, "menuentry \"%s\" --class=vtoydisk {\n"
+        "   echo \"unsupported file system type!\" \n"
+        "   ventoy_pause\n"
+        "}\n",
+        title);
+}
+else
+{
+    browser_ssprintf(mbuf, "menuentry \"%s\" --class=vtoydisk {\n"
+        "  vt_browser_dir %s,%d 0x%lx /\n"
+        "}\n",
+        title, (ulong)fs, disk->name, partition->number + 1, (ulong)fs);
+    
+    // Düzeltilmiş satır
+    grub_snprintf(buf, "set bs=0x%lx", grub_env_get("bs"));
+}
     ventoy_browser_mbuf_extend(mbuf);
 
     return 0;
