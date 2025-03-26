@@ -146,6 +146,7 @@ static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_p
     grub_fs_t fs;
     char *Label = NULL;
     browser_mbuf *mbuf = (browser_mbuf *)data;
+    ulong bs = 0;  // Burada bs, disk bölümünün adresini tutacak değişken
 
     (void)data;
 
@@ -191,6 +192,9 @@ static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_p
             grub_get_human_size(partition->len << disk->log_sector_size, GRUB_HUMAN_SIZE_SHORT));
     }
 
+    // Disk bölümünün bellek adresini bs değişkenine atıyoruz
+    bs = (ulong)fs;  // Burada fs'nin bellek adresini bs'ye atıyoruz
+
     if (ventoy_get_fs_type(fs->name) >= ventoy_fs_max)
     {
         browser_ssprintf(mbuf, "menuentry \"%s\" --class=vtoydisk {\n"
@@ -201,13 +205,11 @@ static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_p
     }
     else
     {
+        // Burada bs değişkenini kullanarak vt_browser_dir komutunu oluşturuyoruz
         browser_ssprintf(mbuf, "menuentry \"%s\" --class=vtoydisk {\n"
             "  vt_browser_dir %s,%d 0x%lx /\n"
             "}\n",
-            title, disk->name, partition->number + 1, (ulong)fs);
-        
-        // Düzeltilmiş satır
-        grub_snprintf(title, sizeof(title), "set bs=0x%lx", (ulong)fs);
+            title, disk->name, partition->number + 1, bs);  // 0x%lx ifadesi ile bs kullanılıyor
     }
     
     ventoy_browser_mbuf_extend(mbuf);
