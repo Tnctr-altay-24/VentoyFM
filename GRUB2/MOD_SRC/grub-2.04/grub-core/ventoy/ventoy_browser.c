@@ -146,8 +146,8 @@ static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_p
     grub_fs_t fs;
     char *Label = NULL;
     browser_mbuf *mbuf = (browser_mbuf *)data;
-    ulong bs = NULL;
-    buf = NULL;
+    ulong *bs;
+    char *buf = NULL;
 
     (void)data;
 
