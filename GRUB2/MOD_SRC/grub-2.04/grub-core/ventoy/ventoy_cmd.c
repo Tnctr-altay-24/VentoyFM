@@ -6797,12 +6797,6 @@ int ventoy_env_init(void)
     grub_env_set("grub_cpu_platform", buf);
     grub_env_export("grub_cpu_platform");
 
-    bs = grub_fs_probe(dev);
-    if (!bs)
-    {
-        grub_device_close(dev);
-        return 0;
-    }
     grub_snprintf(buf, sizeof(buf), "0x%lx", (ulong)bs);
     grub_env_set("bs", buf);
     grub_env_export("bs");
