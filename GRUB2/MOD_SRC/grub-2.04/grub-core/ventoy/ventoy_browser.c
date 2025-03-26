@@ -202,10 +202,10 @@ static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_p
     else
     {
         browser_ssprintf(mbuf, "menuentry \"%s\" --class=vtoydisk {\n"
-            "  set bs=0x%lx"
             "  vt_browser_dir %s,%d 0x%lx /\n"
             "}\n",
             title, (ulong)fs, disk->name, partition->number + 1, (ulong)fs);
+        grub_snprintf(buf), "set bs=0x%lx", grub_env_get("bs")
     }
 
     ventoy_browser_mbuf_extend(mbuf);
@@ -631,11 +631,15 @@ grub_err_t ventoy_cmd_browser_disk(grub_extcmd_context_t ctxt, int argc, char **
 
     if (g_tree_view_menu_style == 0)
     {
-        browser_ssprintf(&mbuf, "menuentry \"%-10s [%s]\" {\n  configfile ${prefix}/FileManager.cfg \n}\n", "FileManager.cfg", "Dosyasını çalıştır");
+        browser_ssprintf(&mbuf, "menuentry \"%-10s [%s]\" --class=\"vtoyret\" VTOY_RET {\n  "
+                         "  echo 'return ...' \n}\n", "<--", 
+                         ventoy_get_vmenu_title("VTLANG_BROWER_RETURN"));        
     }
     else
     {
-        browser_ssprintf(&mbuf, "menuentry \"[%s]\" {\n  configfile ${prefix}/FileManager.cfg \n}\n", "FileManager.cfg Dosyasını çalıştır");
+        browser_ssprintf(&mbuf, "menuentry \"[%s]\" --class=\"vtoyret\" VTOY_RET {\n  "
+                         "  echo 'return ...' \n}\n", 
+                         ventoy_get_vmenu_title("VTLANG_BROWER_RETURN"));      
     }
 
     grub_disk_dev_iterate(ventoy_browser_iterate_disk, &mbuf);
