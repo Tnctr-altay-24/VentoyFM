@@ -205,7 +205,10 @@ static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_p
             "  vt_browser_dir %s,%d 0x%lx /\n"
             "}\n",
             title, disk->name, partition->number + 1, (ulong)fs);
-        grub_snprintf(buf, sizeof(buf), "set bs=0x%lx", (ulong)bs);
+    
+        grub_snprintf(buf, sizeof(buf), "0x%lx", (ulong)bs);
+        grub_env_set("bs", buf);
+        grub_env_export("bs");
     }
 
     ventoy_browser_mbuf_extend(mbuf);
