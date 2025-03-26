@@ -146,6 +146,8 @@ static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_p
     grub_fs_t fs;
     char *Label = NULL;
     browser_mbuf *mbuf = (browser_mbuf *)data;
+    ulong bs = NULL;
+    buf = NULL;
 
     (void)data;
 
@@ -169,6 +171,13 @@ static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_p
         return 0;
     }
 
+    bs = grub_fs_probe(dev);
+    if (!bs)
+    {
+        grub_device_close(dev);
+        return 0;
+    }
+    
     fs->fs_label(dev, &Label);
 
     if (ventoy_check_file_exist("(%s)/.ventoyignore", partname))
