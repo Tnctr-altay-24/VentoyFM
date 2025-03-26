@@ -145,6 +145,7 @@ static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_p
     grub_device_t dev;
     grub_fs_t fs;
     char *Label = NULL;
+    char buf[256];
     browser_mbuf *mbuf = (browser_mbuf *)data;
 
     (void)data;
@@ -207,7 +208,7 @@ else
         title, (ulong)fs, disk->name, partition->number + 1, (ulong)fs);
     
     // Düzeltilmiş satır
-    grub_snprintf(buf, "set bs=0x%lx", grub_env_get("bs"));
+    grub_snprintf(buf, "set bs=0x%lx", grub_env_get("bs"), (ulong)fs);
 }
     ventoy_browser_mbuf_extend(mbuf);
 
