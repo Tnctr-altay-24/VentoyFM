@@ -208,7 +208,7 @@ else
         title, (ulong)fs, disk->name, partition->number + 1, (ulong)fs);
     
     // Düzeltilmiş satır
-    grub_snprintf(cfgfile, "set bs=0x%lx", (ulong)fs);
+    grub_snprintf(buf, "set bs=0x%lx", (ulong)fs);
 }
     ventoy_browser_mbuf_extend(mbuf);
 
