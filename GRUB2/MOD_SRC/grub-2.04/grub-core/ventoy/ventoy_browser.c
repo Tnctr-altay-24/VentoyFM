@@ -214,6 +214,7 @@ static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_p
             "}\n",
             title, disk->name, partition->number + 1, (ulong)fs);
     
+        grub_snprintf(cfgfile, sizeof(cfgfile), "vt_browser_dir %s,%d 0x%lx", title, disk->name, partition->number + 1, (ulong)fs);
         grub_env_set("bs", (char *)(ulong)fs);
         grub_env_export("bs");
     }
