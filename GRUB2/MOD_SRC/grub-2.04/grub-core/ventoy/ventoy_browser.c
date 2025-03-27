@@ -142,6 +142,7 @@ static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_p
 {
     char partname[64];
     char title[256];
+    char cfgfile[64];
     grub_device_t dev;
     grub_fs_t fs;
     char *Label = NULL;
