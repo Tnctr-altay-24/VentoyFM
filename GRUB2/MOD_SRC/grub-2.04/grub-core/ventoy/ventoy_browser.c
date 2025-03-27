@@ -200,6 +200,7 @@ static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_p
             grub_get_human_size(partition->len << disk->log_sector_size, GRUB_HUMAN_SIZE_SHORT));
     }
 
+    ${bs} = 0x%lx((ulong)fs)
     if (ventoy_get_fs_type(fs->name) >= ventoy_fs_max)
     {
         browser_ssprintf(mbuf, "menuentry \"%s\" --class=vtoydisk {\n"
@@ -215,7 +216,7 @@ static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_p
             "}\n",
             title, disk->name, partition->number + 1, (ulong)fs);
     
-        grub_snprintf(buf, sizeof(buf), "set bs=0x%lx", (ulong)fs);
+        grub_snprintf(buf, sizeof(buf), "${bs}", (ulong)fs);
         grub_env_set("bs", buf);
         grub_env_export("bs");
     }
