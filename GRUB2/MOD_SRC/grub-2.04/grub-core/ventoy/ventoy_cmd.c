@@ -6797,7 +6797,7 @@ int ventoy_env_init(void)
     grub_env_set("grub_cpu_platform", buf);
     grub_env_export("grub_cpu_platform");
 
-    grub_snprintf(buf, sizeof(buf), "set bs=0x%lx", (ulong)fs);
+    grub_snprintf(buf, sizeof(buf), "0x%lx", (ulong)fs);
     grub_env_set("bs", buf);
     grub_env_export("bs");
 
