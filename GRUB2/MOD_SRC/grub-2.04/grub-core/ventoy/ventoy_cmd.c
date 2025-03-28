@@ -6748,16 +6748,15 @@ int ventoy_env_init(void)
     char buf[64];
     grub_fs_t fs;
     grub_fs_t bs;
-    ulong *bs = NULL;
 
-    fs = grub_fs_probe(dev);
+    fs = grub_fs_probe;
     if (!fs)
     {
-        grub_device_close(dev);
+        grub_device_close;
         return 0;
     }
 
-    fs->fs_label(dev, &Label);
+    fs->fs_label;
 
     grub_env_set("vtdebug_flag", "");
 
