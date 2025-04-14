@@ -6748,8 +6748,9 @@ int ventoy_env_init(void)
     char buf[64];
     char partname[64];
     grub_device_t dev;
-    char *Label = NULL;
     grub_fs_t fs = NULL;
+    const char *disk->name = NULL;
+    int partition->number = -1;
 
     grub_snprintf(partname, sizeof(partname) - 1, "%s,%d", disk->name, partition->number + 1);
 
