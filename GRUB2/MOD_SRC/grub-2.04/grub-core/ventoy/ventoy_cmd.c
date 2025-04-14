@@ -6751,11 +6751,6 @@ int ventoy_env_init(void)
     char *Label = NULL;
     grub_fs_t fs = NULL;
 
-    if (partition->number == 1 && g_vtoy_dev && grub_strcmp(disk->name, g_vtoy_dev) == 0)
-    {
-        return 0;
-    }
-
     grub_snprintf(partname, sizeof(partname) - 1, "%s,%d", disk->name, partition->number + 1);
 
     dev = grub_device_open(partname);
