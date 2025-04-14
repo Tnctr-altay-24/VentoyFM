@@ -6749,10 +6749,10 @@ int ventoy_env_init(void)
     char partname[64];
     grub_device_t dev;
     grub_fs_t fs = NULL;
-    const char *disk->name = "hd0";
-    int partition->number = 0;
+    const char *disk_name = "hd0";
+    int partition_number = 0;
 
-    grub_snprintf(partname, sizeof(partname) - 1, "%s,%d", disk->name, partition->number + 1);
+    grub_snprintf(partname, sizeof(partname) - 1, "%s,%d", disk_name, partition_number + 1);
 
     dev = grub_device_open(partname);
     if (!dev)
