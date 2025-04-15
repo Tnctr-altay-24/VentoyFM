@@ -6752,7 +6752,7 @@ int ventoy_env_init(void)
     grub_device_t dev = NULL;
     grub_disk_t disk = dev ? dev->disk : NULL;
     grub_partition_t partition = disk ? disk->partition : NULL;
-    grub_fs_t fs;
+    grub_fs_t fs = NULL;
     char *Label = NULL;
 
     grub_env_set("vtdebug_flag", "");
@@ -6829,6 +6829,10 @@ int ventoy_env_init(void)
     grub_snprintf(buf, sizeof(buf), "0x%lx", (ulong)fs);
     grub_env_set("bs", buf);
     grub_env_export("bs");
+
+    grub_snprintf(buf, sizeof(buf), "%s,%d", disk->name, partition->number + 1);
+    grub_env_set("2", buf);
+    grub_env_export("2");
 
     return 0;
 }
