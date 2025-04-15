@@ -6826,13 +6826,13 @@ int ventoy_env_init(void)
 
     fs->fs_label(dev, &Label);
 
-    grub_snprintf(buf, sizeof(buf), "0x%lx", (ulong)fs);
-    grub_env_set("bs", buf);
-    grub_env_export("bs");
-
     grub_snprintf(buf, sizeof(buf), "%s,%d", disk->name, partition->number + 1);
     grub_env_set("2", buf);
     grub_env_export("2");
+
+    grub_snprintf(buf, sizeof(buf), "0x%lx", (ulong)fs);
+    grub_env_set("bs", buf);
+    grub_env_export("bs");
 
     return 0;
 }
