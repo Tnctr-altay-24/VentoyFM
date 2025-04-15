@@ -6746,13 +6746,8 @@ int ventoy_env_init(void)
 {
     int i;
     char buf[64];
-    char partname[64];
     grub_device_t dev;
     grub_fs_t fs = NULL;
-    const char *disk_name = "hd0";
-    int partition_number = 0;
-
-    grub_snprintf(partname, sizeof(partname) - 1, "%s,%d", disk_name, partition_number + 1);
 
     dev = grub_device_open(partname);
     if (!dev)
@@ -6816,7 +6811,7 @@ int ventoy_env_init(void)
     grub_env_set("grub_cpu_platform", buf);
     grub_env_export("grub_cpu_platform");
 
-    grub_snprintf(buf, sizeof(buf), "%s,%d 0x%lx", disk_name, partition_number + 1, (ulong)fs);
+    grub_snprintf(buf, sizeof(buf), "0x%lx", (ulong)fs);
     grub_env_set("bs", buf);
     grub_env_export("bs");
 
