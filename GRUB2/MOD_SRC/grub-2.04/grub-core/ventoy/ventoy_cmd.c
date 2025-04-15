@@ -6746,8 +6746,10 @@ int ventoy_env_init(void)
 {
     int i;
     char buf[64];
-    char cfgfile[64];
-    grub_fs_t fs = NULL;
+    char partname[64];
+    grub_device_t dev;
+    grub_fs_t fs;
+    char *Label = NULL;
 
     grub_env_set("vtdebug_flag", "");
 
@@ -6798,11 +6800,30 @@ int ventoy_env_init(void)
     grub_env_set("grub_cpu_platform", buf);
     grub_env_export("grub_cpu_platform");
 
-    grub_snprintf(cfgfile, sizeof(cfgfile), "configfile ${prefix}/FileManager.cfg");
+    grub_snprintf(partname, sizeof(partname) - 1, "%s,%d", disk->name, partition->number + 1);
 
-    grub_snprintf(buf, sizeof(buf), "0x%lx", (ulong)fs);
-    grub_env_set("bs", buf);
-    grub_env_export("bs");
+    dev = grub_device_open(partname);
+    if (!dev)
+    {
+        return 0;
+    }
+
+    fs = grub_fs_probe(dev);
+    if (!fs)
+    {
+        grub_device_close(dev);
+        return 0;
+    }
+
+    fs->fs_label(dev, &Label);
+
+    if (dev && dev->fs)
+	{
+		fs = dev->fs;
+    		grub_snprintf(buf, sizeof(buf), "0x%lx", (ulong)fs);
+    		grub_env_set("bs", buf);
+    		grub_env_export("bs");
+	}
 
     return 0;
 }
