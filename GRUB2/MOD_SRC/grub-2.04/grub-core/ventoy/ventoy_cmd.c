@@ -6746,7 +6746,22 @@ int ventoy_env_init(void)
 {
     int i;
     char buf[64];
-    grub_fs_t fs = NULL;
+    grub_device_t dev;
+    char partname[64];
+    grub_fs_t fs;
+
+    dev = grub_device_open(partname);
+    if (!dev)
+    {
+        return 0;
+    }
+
+    fs = grub_fs_probe(dev);
+    if (!fs)
+    {
+        grub_device_close(dev);
+        return 0;
+    }
 
     grub_env_set("vtdebug_flag", "");
 
