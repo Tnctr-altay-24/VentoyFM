@@ -6751,11 +6751,6 @@ int ventoy_env_init(void)
     grub_fs_t fs;
     char *Label = NULL;
 
-    if (partition->number == 1 && g_vtoy_dev && grub_strcmp(disk->name, g_vtoy_dev) == 0)
-    {
-        return 0;
-    }
-
     grub_env_set("vtdebug_flag", "");
 
     grub_register_vtoy_menu_lang_hook(ventoy_menu_lang_read_hook);
@@ -6804,6 +6799,11 @@ int ventoy_env_init(void)
     grub_snprintf(buf, sizeof(buf), "%s-%s", GRUB_TARGET_CPU, GRUB_PLATFORM);
     grub_env_set("grub_cpu_platform", buf);
     grub_env_export("grub_cpu_platform");
+
+    if (partition->number == 1 && g_vtoy_dev && grub_strcmp(disk->name, g_vtoy_dev) == 0)
+    {
+        return 0;
+    }
 
     grub_snprintf(partname, sizeof(partname) - 1, "%s,%d", disk->name, partition->number + 1);
 
