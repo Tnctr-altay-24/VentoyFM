@@ -6751,6 +6751,11 @@ int ventoy_env_init(void)
     grub_fs_t fs;
     char *Label = NULL;
 
+    if (partition->number == 1 && g_vtoy_dev && grub_strcmp(disk->name, g_vtoy_dev) == 0)
+    {
+        return 0;
+    }
+
     grub_env_set("vtdebug_flag", "");
 
     grub_register_vtoy_menu_lang_hook(ventoy_menu_lang_read_hook);
