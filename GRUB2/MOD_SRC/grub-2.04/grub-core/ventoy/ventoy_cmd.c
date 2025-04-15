@@ -6738,7 +6738,7 @@ end:
 }
 
 
-static const char * ventoy_menu_lang_read_hook(struct grub_env_var *var, grub_disk *disk, grub_partition_t partition, const char *val)
+static const char * ventoy_menu_lang_read_hook(struct grub_env_var *var, const char *val)
 {
     (void)var;
     return ventoy_get_vmenu_title(val);
@@ -6748,6 +6748,12 @@ int ventoy_env_init(void)
 {
     int i;
     char buf[64];
+    char partname[64];
+    grub_device_t dev = NULL;
+    grub_disk_t disk = dev ? dev->disk : NULL;
+    grub_partition_t partition = disk ? disk->partition : NULL;
+    grub_fs_t fs;
+    char *Label = NULL;
 
     grub_env_set("vtdebug_flag", "");
 
@@ -6797,11 +6803,6 @@ int ventoy_env_init(void)
     grub_snprintf(buf, sizeof(buf), "%s-%s", GRUB_TARGET_CPU, GRUB_PLATFORM);
     grub_env_set("grub_cpu_platform", buf);
     grub_env_export("grub_cpu_platform");
-
-    char partname[64];
-    grub_device_t dev = NULL;
-    grub_fs_t fs;
-    char *Label = NULL;
 
     if (partition && partition->number == 1 && g_vtoy_dev && grub_strcmp(disk->name, g_vtoy_dev) == 0)
     {
