@@ -212,12 +212,12 @@ static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_p
     {
         browser_ssprintf(mbuf, "menuentry \"%s\" --class=vtoydisk {\n"
             "  set bs=0x%lx"
-            "  vt_browser_dir %s,%d ${bs] /\n"
+            "  vt_browser_dir %s,%d ${bs} /\n"
             "}\n",
             title, (ulong)fs, disk->name, partition->number + 1);
     }
 
-    grub_snprintf(cfgfile, sizeof(cfgfile), "%s,%d 0x%lx", disk->name, partition->number + 1, (ulong)fs);
+    grub_snprintf(cfgfile, sizeof(cfgfile), "0x%lx", (ulong)fs);
     grub_env_set("bs", cfgfile);
     grub_env_export("bs");
 
