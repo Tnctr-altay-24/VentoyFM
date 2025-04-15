@@ -142,6 +142,7 @@ static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_p
 {
     char partname[64];
     char title[256];
+    char cfgfile[64];
     grub_device_t dev;
     grub_fs_t fs;
     char *Label = NULL;
@@ -214,6 +215,10 @@ static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_p
             "}\n",
             title, disk->name, partition->number + 1, (ulong)fs);
     }
+
+    grub_snprintf(cfgfile, sizeof(cfgfile), "0x%lx", (ulong)fs);
+    grub_env_set("bs", cfgfile);
+    grub_env_export("bs");
 
     ventoy_browser_mbuf_extend(mbuf);
 
