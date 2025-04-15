@@ -6747,6 +6747,8 @@ int ventoy_env_init(void)
     int i;
     char buf[64];
     char partname[64];
+    grub_partition_t partition;
+    grub_disk_t disk;
     grub_device_t dev;
     grub_fs_t fs;
     char *Label = NULL;
