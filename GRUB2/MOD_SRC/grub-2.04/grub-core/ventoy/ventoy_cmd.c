@@ -6746,33 +6746,7 @@ int ventoy_env_init(void)
 {
     int i;
     char buf[64];
-    grub_device_t dev;
-    char partname[64];
-    grub_fs_t fs;
-    grub_fs_t bs;
-    char *Label = NULL;
-
-    dev = grub_device_open(partname);
-    if (!dev)
-    {
-        return 0;
-    }
-
-    fs = grub_fs_probe(dev);
-    if (!fs)
-    {
-        grub_device_close(dev);
-        return 0;
-    }
-
-    bs = grub_fs_probe(dev);
-    if (!bs)
-    {
-        grub_device_close(dev);
-        return 0;
-    }
-
-    fs->fs_label(dev, &Label);
+    grub_fs_t fs = NULL;
 
     grub_env_set("vtdebug_flag", "");
 
@@ -6823,7 +6797,7 @@ int ventoy_env_init(void)
     grub_env_set("grub_cpu_platform", buf);
     grub_env_export("grub_cpu_platform");
 
-    grub_snprintf(buf, sizeof(buf), "set bs=0x%lx", (ulong)fs);
+    grub_snprintf(buf, sizeof(buf), "0x%lx", (ulong)fs);
     grub_env_set("bs", buf);
     grub_env_export("bs");
 
