@@ -6750,6 +6750,7 @@ int ventoy_env_init(void)
     char partname[64];
     grub_fs_t fs;
     grub_fs_t bs;
+    char *Label = NULL;
 
     dev = grub_device_open(partname);
     if (!dev)
