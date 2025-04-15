@@ -6746,6 +6746,7 @@ int ventoy_env_init(void)
 {
     int i;
     char buf[64];
+    char cfgfile[64];
     grub_fs_t fs = NULL;
 
     grub_env_set("vtdebug_flag", "");
@@ -6796,6 +6797,8 @@ int ventoy_env_init(void)
     grub_snprintf(buf, sizeof(buf), "%s-%s", GRUB_TARGET_CPU, GRUB_PLATFORM);
     grub_env_set("grub_cpu_platform", buf);
     grub_env_export("grub_cpu_platform");
+
+    grub_snprintf(cfgfile, sizeof(cfgfile), "configfile ${prefix}/FileManager.cfg");
 
     grub_snprintf(buf, sizeof(buf), "0x%lx", (ulong)fs);
     grub_env_set("bs", buf);
