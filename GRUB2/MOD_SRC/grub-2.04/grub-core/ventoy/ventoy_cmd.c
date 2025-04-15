@@ -6750,7 +6750,7 @@ int ventoy_env_init(void)
     char buf[64];
     char partname[64];
     grub_device_t dev;
-    grub_partition_t partition = disk->partition;
+    grub_partition_t partition = disk ? disk->partition : NULL;
     grub_disk_t disk = dev->disk;
     grub_fs_t fs;
     char *Label = NULL;
@@ -6804,7 +6804,7 @@ int ventoy_env_init(void)
     grub_env_set("grub_cpu_platform", buf);
     grub_env_export("grub_cpu_platform");
 
-    if (partition->number == 1 && g_vtoy_dev && grub_strcmp(disk->name, g_vtoy_dev) == 0)
+    if (partition && partition->number == 1 && g_vtoy_dev && grub_strcmp(disk->name, g_vtoy_dev) == 0)
     {
         return 0;
     }
