@@ -149,6 +149,8 @@ static char g_iso_vd_id_application[130];
 static int g_pager_flag = 0;
 static char g_old_pager[32];
 
+static const char *g_vtoy_dev = NULL;
+
 const char *g_menu_class[img_type_max] = 
 {
     "vtoyiso", "vtoywim", "vtoyefi", "vtoyimg", "vtoyvhd", "vtoyvtoy"
@@ -6824,13 +6826,9 @@ int ventoy_env_init(void)
 
     fs->fs_label(dev, &Label);
 
-    if (dev && dev->fs)
-	{
-		fs = dev->fs;
-    		grub_snprintf(buf, sizeof(buf), "0x%lx", (ulong)fs);
-    		grub_env_set("bs", buf);
-    		grub_env_export("bs");
-	}
+    grub_snprintf(buf, sizeof(buf), "0x%lx", (ulong)fs);
+    grub_env_set("bs", buf);
+    grub_env_export("bs");
 
     return 0;
 }
