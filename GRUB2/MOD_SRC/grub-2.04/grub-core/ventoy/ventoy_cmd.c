@@ -6750,8 +6750,8 @@ int ventoy_env_init(void)
     char buf[64];
     char partname[64];
     grub_device_t dev = NULL;
-    grub_disk_t disk = dev ? dev->disk : NULL;
-    grub_partition_t partition = disk ? disk->partition : NULL;
+    grub_disk_t disk = NULL;
+    grub_partition_t partition = NULL;
     grub_fs_t fs = NULL;
     char *Label = NULL;
 
@@ -6820,18 +6820,33 @@ int ventoy_env_init(void)
     dev = grub_device_open(partname);
     if (!dev)
     {
-        disk = dev->disk;
-        return 0;
+        grub_printf("ventoy_env_init: failed to open device\n");
+        return 1;
+    }
+
+    disk = dev->disk;
+    partition = disk ? disk->partition : NULL;
+
+    if (!partition)
+    {
+        grub_printf("ventoy_env_init: partition is NULL\n");
+        grub_device_close(dev);
+        return 1;
     }
 
     fs = grub_fs_probe(dev);
     if (!fs)
     {
+        grub_printf("ventoy_env_init: failed to detect filesystem\n");
         grub_device_close(dev);
-        return 0;
+        return 1;
     }
 
-    fs->fs_label(dev, &Label);
+    if (fs->fs_label)
+    {
+        fs->fs_label(dev, &Label);
+        grub_printf("ventoy_env_init: label = %s\n", Label ? Label : "NULL");
+    }
 
     grub_snprintf(buf, sizeof(buf), "%s,%d", disk->name, partition->number + 1);
     grub_env_set("2", buf);
