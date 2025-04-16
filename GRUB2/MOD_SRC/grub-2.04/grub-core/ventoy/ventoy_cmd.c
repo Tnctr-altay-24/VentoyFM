@@ -6748,12 +6748,6 @@ int ventoy_env_init(void)
 {
     int i;
     char buf[64];
-    char partname[64];
-    grub_device_t dev = NULL;
-    grub_disk_t disk = NULL;
-    grub_partition_t partition = NULL;
-    grub_fs_t fs = NULL;
-    char *Label = NULL;
 
     grub_env_set("vtdebug_flag", "");
 
@@ -6804,6 +6798,27 @@ int ventoy_env_init(void)
     grub_env_set("grub_cpu_platform", buf);
     grub_env_export("grub_cpu_platform");
 
+    return 0;
+}
+
+static grub_err_t ventoy_env_fm_cmd(grub_extcmd_context_t ctxt, int argc, char **args)
+{
+    return ventoy_env_fm();
+}
+
+int ventoy_env_fm(void)
+{
+    int i;
+    char buf[64];
+    char partname[64];
+    grub_device_t dev = NULL;
+    grub_disk_t disk = NULL;
+    grub_partition_t partition = NULL;
+    grub_fs_t fs;
+    char *Label = NULL;
+
+    grub_env_set("vtdebug_flag", "");
+    
     if (!partition)
     {
         partition = disk->partition;
@@ -6820,7 +6835,7 @@ int ventoy_env_init(void)
     dev = grub_device_open(partname);
     if (!dev)
     {
-        grub_printf("ventoy_env_init: failed to open device\n");
+        grub_printf("ventoy_env_fm: failed to open device\n");
         return 1;
     }
 
@@ -6829,7 +6844,7 @@ int ventoy_env_init(void)
 
     if (!partition)
     {
-        grub_printf("ventoy_env_init: partition is NULL\n");
+        grub_printf("ventoy_env_fm: partition is NULL\n");
         grub_device_close(dev);
         return 1;
     }
@@ -6837,7 +6852,7 @@ int ventoy_env_init(void)
     fs = grub_fs_probe(dev);
     if (!fs)
     {
-        grub_printf("ventoy_env_init: failed to detect filesystem\n");
+        grub_printf("ventoy_env_fm: failed to detect filesystem\n");
         grub_device_close(dev);
         return 1;
     }
@@ -6845,7 +6860,7 @@ int ventoy_env_init(void)
     if (fs->fs_label)
     {
         fs->fs_label(dev, &Label);
-        grub_printf("ventoy_env_init: label = %s\n", Label ? Label : "NULL");
+        grub_printf("ventoy_env_fm: label = %s\n", Label ? Label : "NULL");
     }
 
     grub_snprintf(buf, sizeof(buf), "%s,%d", disk->name, partition->number + 1);
@@ -6853,6 +6868,7 @@ int ventoy_env_init(void)
     grub_env_export("2");
 
     grub_snprintf(buf, sizeof(buf), "0x%lx", (ulong)fs);
+    grub_printf("ventoy_env_fm: fs addr = %s\n", buf);
     grub_env_set("bs", buf);
     grub_env_export("bs");
 
@@ -6865,6 +6881,7 @@ static cmd_para ventoy_cmds[] =
 {
     { "vt_browser_disk",  ventoy_cmd_browser_disk,  0, NULL, "",   "",    NULL },
     { "vt_browser_dir",  ventoy_cmd_browser_dir,  0, NULL, "",   "",    NULL },
+    { "vt_browser_Fm",  ventoy_env_fm_cmd,  0, NULL, "",   "",    NULL },
     { "vt_incr",  ventoy_cmd_incr,  0, NULL, "{Var} {INT}",   "Increase integer variable",    NULL },
     { "vt_mod",  ventoy_cmd_mod,  0, NULL, "{Int} {Int} {Var}",   "mod integer variable",    NULL },
     { "vt_strstr",  ventoy_cmd_strstr,  0, NULL, "",   "",    NULL },
