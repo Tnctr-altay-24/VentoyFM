@@ -6801,14 +6801,18 @@ int ventoy_env_init(void)
     return 0;
 }
 
+int ventoy_env_fm(void);  // Prototip eklendi
+
 static grub_err_t ventoy_env_fm_cmd(grub_extcmd_context_t ctxt, int argc, char **args)
 {
+    (void)ctxt;
+    (void)argc;
+    (void)args;
     return ventoy_env_fm();
 }
 
 int ventoy_env_fm(void)
 {
-    int i;
     char buf[64];
     char partname[64];
     grub_device_t dev = NULL;
@@ -6818,13 +6822,13 @@ int ventoy_env_fm(void)
     char *Label = NULL;
 
     grub_env_set("vtdebug_flag", "");
-    
+
     if (!partition)
     {
         partition = disk->partition;
         return 0;
     }
-    
+
     if (partition && partition->number == 1 && g_vtoy_dev && grub_strcmp(disk->name, g_vtoy_dev) == 0)
     {
         return 0;
