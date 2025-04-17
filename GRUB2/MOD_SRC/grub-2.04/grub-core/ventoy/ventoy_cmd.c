@@ -6852,7 +6852,7 @@ int ventoy_env_fm(const char *devname)
     grub_env_export("2");
 
     // set fs address to ${bs}
-    grub_snprintf(buf, sizeof(buf), "0x%lx", (unsigned long)(uintptr_t)fs);
+    grub_snprintf(buf, sizeof(buf), "0x%lx", (ulong)fs);
     grub_printf("ventoy_env_fm: fs addr = %s\n", buf);
     grub_env_set("bs", buf);
     grub_env_export("bs");
