@@ -6801,66 +6801,6 @@ int ventoy_env_init(void)
     return 0;
 }
 
-int ventoy_env_fm(const char *devname);
-
-static grub_err_t ventoy_env_fm_cmd(grub_extcmd_context_t ctxt, int argc, char **args)
-{
-    (void)ctxt;
-    if (argc < 1 || !args[0])
-    {
-        grub_printf("ventoy_env_fm: missing device argument\n");
-        return GRUB_ERR_BAD_ARGUMENT;
-    }
-
-    return ventoy_env_fm(args[0]);
-}
-
-int ventoy_env_fm(const char *devname)
-{
-    char buf[64];
-    grub_device_t dev = NULL;
-    grub_fs_t fs = NULL;
-    char *Label = NULL;
-
-    grub_env_set("vtdebug_flag", "");
-
-    grub_printf("ventoy_env_fm: opening device %s\n", devname);
-
-    dev = grub_device_open(devname);
-    if (!dev)
-    {
-        grub_printf("ventoy_env_fm: failed to open device %s\n", devname);
-        return 1;
-    }
-
-    fs = grub_fs_probe(dev);
-    if (!fs)
-    {
-        grub_printf("ventoy_env_fm: failed to detect filesystem on %s\n", devname);
-        grub_device_close(dev);
-        return 1;
-    }
-
-    if (fs->fs_label)
-    {
-        fs->fs_label(dev, &Label);
-        grub_printf("ventoy_env_fm: label = %s\n", Label ? Label : "NULL");
-    }
-
-    // set device to ${2}
-    grub_env_set("2", devname);
-    grub_env_export("2");
-
-    // set fs address to ${bs}
-    grub_snprintf(buf, sizeof(buf), "0x%lx", (ulong)fs);
-    grub_printf("ventoy_env_fm: fs addr = %s\n", buf);
-    grub_env_set("bs", buf);
-    grub_env_export("bs");
-
-    grub_device_close(dev);
-    return 0;
-}
-
 int ventoy_env_fm(void);  // Prototip eklendi
 
 static grub_err_t ventoy_env_fm_cmd(grub_extcmd_context_t ctxt, int argc, char **args)
