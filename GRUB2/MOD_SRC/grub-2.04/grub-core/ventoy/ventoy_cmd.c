@@ -6801,7 +6801,9 @@ int ventoy_env_init(void)
     return 0;
 }
 
-int ventoy_env_fm(void);
+static grub_extcmd_t cmd;
+
+int ventoy_env_fm(grub_disk_t disk, grub_partition_t partition);
 
 static grub_err_t ventoy_env_fm_cmd(struct grub_disk *disk, const grub_partition_t partition, void *data, grub_extcmd_context_t ctxt, int argc, char **args)
 {
@@ -6816,57 +6818,57 @@ static grub_err_t ventoy_env_fm_cmd(struct grub_disk *disk, const grub_partition
 int ventoy_env_fm(grub_disk_t disk, grub_partition_t partition)
 {
     char buf[64];
-    char cmd[64];
+    char cmdline[128];
     char partname[64];
     grub_device_t dev;
     grub_fs_t fs;
     char *Label = NULL;
 
-    grub_env_set("vtdebug_flag", "");
-
-    if (partition->number == 1 && g_vtoy_dev && grub_strcmp(disk->name, g_vtoy_dev) == 0)
-    {
-        return 0;
-    }
+    if (!disk || !partition)
+        return GRUB_ERR_NONE;
 
     grub_snprintf(partname, sizeof(partname) - 1, "%s,%d", disk->name, partition->number + 1);
 
     dev = grub_device_open(partname);
     if (!dev)
     {
-        return 0;
+        grub_printf("ventoy_env_fm: failed to open device %s\n", partname);
+        return GRUB_ERR_NONE;
     }
 
     fs = grub_fs_probe(dev);
     if (!fs)
     {
+        grub_printf("ventoy_env_fm: no fs on %s\n", partname);
         grub_device_close(dev);
-        return 0;
+        return GRUB_ERR_NONE;
     }
 
-    fs->fs_label(dev, &Label);
+    // (Optional) print fs label
+    if (fs->fs_label)
+        fs->fs_label(dev, &Label);
 
+    // Set ${2}
     grub_snprintf(buf, sizeof(buf), "%s,%d", disk->name, partition->number + 1);
-    grub_snprintf(cmd, sizeof(cmd), "set 2=%s", buf);
-    grub_command_execute(cmd, 0);
+    grub_snprintf(cmdline, sizeof(cmdline), "set 2=%s", buf);
+    grub_script_execute(cmdline);
 
-    grub_printf("ventoy_env_fm: fs addr = %s\n", buf);
+    // Set ${bs}
     grub_snprintf(buf, sizeof(buf), "0x%lx", (ulong)fs);
-    grub_snprintf(cmd, sizeof(cmd), "set bs=%s", buf);
-    grub_command_execute(cmd, 0);
+    grub_snprintf(cmdline, sizeof(cmdline), "set bs=%s", buf);
+    grub_script_execute(cmdline);
 
-    return 0;
+    grub_device_close(dev);
+    return GRUB_ERR_NONE;
 }
 
-static grub_extcmd_t cmd;
-
-GRUB_MOD_INIT(ventoy_env_fm)
+GRUB_MOD_INIT(ventoy_cmd)
 {
     cmd = grub_register_extcmd("ventoy_env_fm", ventoy_env_fm_cmd, 0, 0,
-                               "ventoy_env_fm", "Set partition and fs addr", 0);
+                               "ventoy_env_fm", "Set part and fs address vars", 0);
 }
 
-GRUB_MOD_FINI(ventoy_env_fm)
+GRUB_MOD_FINI(ventoy_cmd)
 {
     grub_unregister_extcmd(cmd);
 }
