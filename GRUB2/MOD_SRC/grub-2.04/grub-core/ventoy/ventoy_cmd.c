@@ -6858,6 +6858,19 @@ int ventoy_env_fm(grub_disk_t disk, grub_partition_t partition)
     return 0;
 }
 
+static grub_extcmd_t cmd;
+
+GRUB_MOD_INIT(ventoy_env_fm)
+{
+    cmd = grub_register_extcmd("ventoy_env_fm", ventoy_env_fm_cmd, 0, 0,
+                               "ventoy_env_fm", "Set partition and fs addr", 0);
+}
+
+GRUB_MOD_FINI(ventoy_env_fm)
+{
+    grub_unregister_extcmd(cmd);
+}
+
 
 
 static cmd_para ventoy_cmds[] = 
