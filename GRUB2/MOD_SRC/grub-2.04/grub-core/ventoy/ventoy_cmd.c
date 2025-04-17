@@ -6801,7 +6801,7 @@ int ventoy_env_init(void)
     return 0;
 }
 
-int ventoy_env_fm(void);  // Prototip eklendi
+int ventoy_env_fm(void);
 
 static grub_err_t ventoy_env_fm_cmd(struct grub_disk *disk, const grub_partition_t partition, void *data, grub_extcmd_context_t ctxt, int argc, char **args)
 {
@@ -6809,10 +6809,11 @@ static grub_err_t ventoy_env_fm_cmd(struct grub_disk *disk, const grub_partition
     (void)ctxt;
     (void)argc;
     (void)args;
-    return ventoy_env_fm();
+
+    return ventoy_env_fm(disk, partition);
 }
 
-int ventoy_env_fm(void)
+int ventoy_env_fm(grub_disk_t disk, grub_partition_t partition)
 {
     char buf[64];
     char cmd[64];
