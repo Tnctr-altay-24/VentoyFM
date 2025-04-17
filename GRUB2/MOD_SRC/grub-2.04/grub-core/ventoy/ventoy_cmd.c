@@ -149,8 +149,6 @@ static char g_iso_vd_id_application[130];
 static int g_pager_flag = 0;
 static char g_old_pager[32];
 
-static const char *g_vtoy_dev = NULL;
-
 const char *g_menu_class[img_type_max] = 
 {
     "vtoyiso", "vtoywim", "vtoyefi", "vtoyimg", "vtoyvhd", "vtoyvtoy"
