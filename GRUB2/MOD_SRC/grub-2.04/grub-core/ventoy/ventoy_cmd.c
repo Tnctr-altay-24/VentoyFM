@@ -6875,6 +6875,7 @@ int ventoy_env_fm(void)
     grub_printf("ventoy_env_fm: fs addr = %s\n", buf);
     grub_env_set("bs", buf);
     grub_env_export("bs");
+    grub_printf("exported bs = %s\n", grub_env_get("bs"));
 
     return 0;
 }
