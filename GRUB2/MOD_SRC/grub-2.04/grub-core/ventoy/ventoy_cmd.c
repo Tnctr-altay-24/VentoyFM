@@ -149,8 +149,6 @@ static char g_iso_vd_id_application[130];
 static int g_pager_flag = 0;
 static char g_old_pager[32];
 
-static const char *g_vtoy_dev = NULL;
-
 const char *g_menu_class[img_type_max] = 
 {
     "vtoyiso", "vtoywim", "vtoyefi", "vtoyimg", "vtoyvhd", "vtoyvtoy"
@@ -6803,20 +6801,19 @@ int ventoy_env_init(void)
 
 static grub_extcmd_t cmd;
 
-int ventoy_env_fm(grub_disk_t disk, grub_partition_t partition);
-
 static grub_err_t ventoy_env_fm_cmd(grub_extcmd_context_t ctxt, int argc, char **args)
 {
     (void)ctxt;
     (void)argc;
     (void)args;
+    return GRUB_ERR_NONE;	
 }
 
-int ventoy_env_fm(grub_disk_t disk, grub_partition_t partition)
+int ventoy_env_fm()
 {
     char buf[64];
     char cmdline[128];
-    char partname[64];
+    char partname[64] = "";
     grub_device_t dev;
     grub_fs_t fs;
     char *Label = NULL;
@@ -6851,7 +6848,7 @@ int ventoy_env_fm(grub_disk_t disk, grub_partition_t partition)
 
 GRUB_MOD_INIT(ventoy_cmd)
 {
-    cmd = grub_register_extcmd("ventoy_env_fm", ventoy_env_fm_cmd, 0, 0,
+    cmd = grub_register_extcmd("ventoy_env_fm", ventoy_env_fm_cmd, 0, NULL,
                                "ventoy_env_fm", "Set part and fs address vars", 0);
 }
 
