@@ -6803,8 +6803,9 @@ int ventoy_env_init(void)
 
 int ventoy_env_fm(void);  // Prototip eklendi
 
-static grub_err_t ventoy_env_fm_cmd(grub_extcmd_context_t ctxt, int argc, char **args)
+static grub_err_t ventoy_env_fm_cmd(struct grub_disk *disk, const grub_partition_t partition, void *data, grub_extcmd_context_t ctxt, int argc, char **args)
 {
+    (void)data;
     (void)ctxt;
     (void)argc;
     (void)args;
@@ -6814,22 +6815,15 @@ static grub_err_t ventoy_env_fm_cmd(grub_extcmd_context_t ctxt, int argc, char *
 int ventoy_env_fm(void)
 {
     char buf[64];
+    char cmd[64];
     char partname[64];
-    grub_device_t dev = NULL;
-    grub_disk_t disk = NULL;
-    grub_partition_t partition = NULL;
+    grub_device_t dev;
     grub_fs_t fs;
     char *Label = NULL;
 
     grub_env_set("vtdebug_flag", "");
 
-    if (!partition)
-    {
-        partition = disk->partition;
-        return 0;
-    }
-
-    if (partition && partition->number == 1 && g_vtoy_dev && grub_strcmp(disk->name, g_vtoy_dev) == 0)
+    if (partition->number == 1 && g_vtoy_dev && grub_strcmp(disk->name, g_vtoy_dev) == 0)
     {
         return 0;
     }
@@ -6839,43 +6833,26 @@ int ventoy_env_fm(void)
     dev = grub_device_open(partname);
     if (!dev)
     {
-        grub_printf("ventoy_env_fm: failed to open device\n");
-        return 1;
-    }
-
-    disk = dev->disk;
-    partition = disk ? disk->partition : NULL;
-
-    if (!partition)
-    {
-        grub_printf("ventoy_env_fm: partition is NULL\n");
-        grub_device_close(dev);
-        return 1;
+        return 0;
     }
 
     fs = grub_fs_probe(dev);
     if (!fs)
     {
-        grub_printf("ventoy_env_fm: failed to detect filesystem\n");
         grub_device_close(dev);
-        return 1;
+        return 0;
     }
 
-    if (fs->fs_label)
-    {
-        fs->fs_label(dev, &Label);
-        grub_printf("ventoy_env_fm: label = %s\n", Label ? Label : "NULL");
-    }
+    fs->fs_label(dev, &Label);
 
     grub_snprintf(buf, sizeof(buf), "%s,%d", disk->name, partition->number + 1);
-    grub_env_set("2", buf);
-    grub_env_export("2");
+    grub_snprintf(cmd, sizeof(cmd), "set 2=%s", buf);
+    grub_command_execute(cmd, 0);
 
-    grub_snprintf(buf, sizeof(buf), "0x%lx", (ulong)fs);
     grub_printf("ventoy_env_fm: fs addr = %s\n", buf);
-    grub_env_set("bs", buf);
-    grub_env_export("bs");
-    grub_printf("exported bs = %s\n", grub_env_get("bs"));
+    grub_snprintf(buf, sizeof(buf), "0x%lx", (ulong)fs);
+    grub_snprintf(cmd, sizeof(cmd), "set bs=%s", buf);
+    grub_command_execute(cmd, 0);
 
     return 0;
 }
