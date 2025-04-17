@@ -6805,14 +6805,11 @@ static grub_extcmd_t cmd;
 
 int ventoy_env_fm(grub_disk_t disk, grub_partition_t partition);
 
-static grub_err_t ventoy_env_fm_cmd(struct grub_disk *disk, const grub_partition_t partition, void *data, grub_extcmd_context_t ctxt, int argc, char **args)
+static grub_err_t ventoy_env_fm_cmd(grub_extcmd_context_t ctxt, int argc, char **args)
 {
-    (void)data;
     (void)ctxt;
     (void)argc;
     (void)args;
-
-    return ventoy_env_fm(disk, partition);
 }
 
 int ventoy_env_fm(grub_disk_t disk, grub_partition_t partition)
@@ -6823,11 +6820,6 @@ int ventoy_env_fm(grub_disk_t disk, grub_partition_t partition)
     grub_device_t dev;
     grub_fs_t fs;
     char *Label = NULL;
-
-    if (!disk || !partition)
-        return GRUB_ERR_NONE;
-
-    grub_snprintf(partname, sizeof(partname) - 1, "%s,%d", disk->name, partition->number + 1);
 
     dev = grub_device_open(partname);
     if (!dev)
@@ -6847,11 +6839,6 @@ int ventoy_env_fm(grub_disk_t disk, grub_partition_t partition)
     // (Optional) print fs label
     if (fs->fs_label)
         fs->fs_label(dev, &Label);
-
-    // Set ${2}
-    grub_snprintf(buf, sizeof(buf), "%s,%d", disk->name, partition->number + 1);
-    grub_snprintf(cmdline, sizeof(cmdline), "set 2=%s", buf);
-    grub_script_execute(cmdline);
 
     // Set ${bs}
     grub_snprintf(buf, sizeof(buf), "0x%lx", (ulong)fs);
