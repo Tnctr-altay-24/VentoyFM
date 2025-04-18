@@ -652,8 +652,6 @@ grub_err_t ventoy_cmd_browser_disk(grub_extcmd_context_t ctxt, int argc, char **
 
 grub_err_t ventoy_cmd_browser_diskfm(grub_extcmd_context_t ctxt, int argc, char **args)
 {
-    char cfgfile[64];
-    char buf[64];
     browser_mbuf mbuf;
     
     (void)ctxt;
