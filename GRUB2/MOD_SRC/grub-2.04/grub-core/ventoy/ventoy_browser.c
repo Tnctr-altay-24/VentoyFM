@@ -667,8 +667,6 @@ grub_err_t ventoy_cmd_browser_diskfm(grub_extcmd_context_t ctxt, int argc, char 
 
     g_vtoy_dev = grub_env_get("vtoydev");
 
-    grub_disk_dev_iterate(ventoy_browser_iterate_disk, &mbuf);
-
     grub_snprintf(cfgfile, sizeof(cfgfile), "configfile mem:0x%lx:size:%d", (ulong)mbuf.buf, mbuf.pos);
     grub_script_execute_sourcecode(cfgfile);
     
