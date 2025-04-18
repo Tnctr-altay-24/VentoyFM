@@ -6799,69 +6799,12 @@ int ventoy_env_init(void)
     return 0;
 }
 
-static grub_extcmd_t cmd;
-
-static grub_err_t ventoy_env_fm_cmd(grub_extcmd_context_t ctxt, int argc, char **args)
-{
-    (void)ctxt;
-    (void)argc;
-    (void)args;
-    return GRUB_ERR_NONE;	
-}
-
-int ventoy_env_fm()
-{
-    char buf[64];
-    char cmdline[128];
-    char partname[64] = "";
-    grub_device_t dev;
-    grub_fs_t fs;
-    char *Label = NULL;
-
-    dev = grub_device_open(partname);
-    if (!dev)
-    {
-        grub_printf("ventoy_env_fm: failed to open device %s\n", partname);
-        return GRUB_ERR_NONE;
-    }
-
-    fs = grub_fs_probe(dev);
-    if (!fs)
-    {
-        grub_printf("ventoy_env_fm: no fs on %s\n", partname);
-        grub_device_close(dev);
-        return GRUB_ERR_NONE;
-    }
-
-    // (Optional) print fs label
-    if (fs->fs_label)
-        fs->fs_label(dev, &Label);
-
-    // Set ${bs}
-    grub_snprintf(buf, sizeof(buf), "0x%lx", (ulong)fs);
-    grub_snprintf(cmdline, sizeof(cmdline), "set bs=%s", buf);
-    grub_script_execute(cmdline);
-
-    grub_device_close(dev);
-    return GRUB_ERR_NONE;
-}
-
-GRUB_MOD_INIT(ventoy_cmd)
-{
-    cmd = grub_register_extcmd("ventoy_env_fm", ventoy_env_fm_cmd, 0, NULL,
-                               "ventoy_env_fm", "Set part and fs address vars", 0);
-}
-
-GRUB_MOD_FINI(ventoy_cmd)
-{
-    grub_unregister_extcmd(cmd);
-}
-
 
 
 static cmd_para ventoy_cmds[] = 
 {
     { "vt_browser_disk",  ventoy_cmd_browser_disk,  0, NULL, "",   "",    NULL },
+    { "vt_browser_fm",  ventoy_cmd_browser_diskfm,  0, NULL, "",   "",    NULL },
     { "vt_browser_dir",  ventoy_cmd_browser_dir,  0, NULL, "",   "",    NULL },
     { "vt_incr",  ventoy_cmd_incr,  0, NULL, "{Var} {INT}",   "Increase integer variable",    NULL },
     { "vt_mod",  ventoy_cmd_mod,  0, NULL, "{Int} {Int} {Var}",   "mod integer variable",    NULL },
