@@ -141,7 +141,6 @@ static browser_node * ventoy_browser_find_top_node(int dir)
 static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_partition_t partition, void *data)
 {
     char partname[64];
-    char buf[64];
     char title[256];
     grub_device_t dev;
     grub_fs_t fs;
@@ -208,8 +207,8 @@ static int ventoy_browser_iterate_partition(struct grub_disk *disk, const grub_p
             title, disk->name, partition->number + 1, (ulong)fs);
     }
 
-    grub_snprintf(buf, sizeof(buf), "0x%lx", (ulong)fs);
-    grub_env_set("bs", buf);
+    grub_snprintf(mbuf, sizeof(mbuf), "0x%lx", (ulong)fs);
+    grub_env_set("bs", mbuf);
     grub_env_export("bs");
 
     ventoy_browser_mbuf_extend(mbuf);
