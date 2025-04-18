@@ -649,3 +649,28 @@ grub_err_t ventoy_cmd_browser_disk(grub_extcmd_context_t ctxt, int argc, char **
     ventoy_browser_mbuf_free(&mbuf);
     VENTOY_CMD_RETURN(GRUB_ERR_NONE);
 }
+
+grub_err_t ventoy_cmd_browser_diskfm(grub_extcmd_context_t ctxt, int argc, char **args)
+{
+    char cfgfile[64];
+    browser_mbuf mbuf;
+    
+    (void)ctxt;
+    (void)argc;
+    (void)args;
+
+    if (!ventoy_browser_mbuf_alloc(&mbuf))
+    {
+        return 1;
+    }
+
+    g_vtoy_dev = grub_env_get("vtoydev");
+
+    grub_disk_dev_iterate(ventoy_browser_iterate_disk, &mbuf);
+
+    grub_snprintf(cfgfile, sizeof(cfgfile), "configfile mem:0x%lx:size:%d", (ulong)mbuf.buf, mbuf.pos);
+    grub_script_execute_sourcecode(cfgfile);
+
+    ventoy_browser_mbuf_free(&mbuf);
+    VENTOY_CMD_RETURN(GRUB_ERR_NONE);
+}
