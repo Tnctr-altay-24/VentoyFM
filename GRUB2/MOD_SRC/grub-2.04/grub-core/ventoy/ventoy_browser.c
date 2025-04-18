@@ -670,6 +670,11 @@ grub_err_t ventoy_cmd_browser_diskfm(grub_extcmd_context_t ctxt, int argc, char 
 
     grub_snprintf(cfgfile, sizeof(cfgfile), "configfile mem:0x%lx:size:%d", (ulong)mbuf.buf, mbuf.pos);
     grub_script_execute_sourcecode(cfgfile);
+    
+    grub_snprintf(buf, sizeof(buf), "0x%lx", (ulong)fs);
+    grub_printf("ventoy_env_fm: fs addr = %s\n", buf);
+    grub_env_set("bs", buf);
+    grub_env_export("bs");
 
     ventoy_browser_mbuf_free(&mbuf);
     VENTOY_CMD_RETURN(GRUB_ERR_NONE);
