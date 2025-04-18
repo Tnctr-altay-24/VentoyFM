@@ -653,6 +653,7 @@ grub_err_t ventoy_cmd_browser_disk(grub_extcmd_context_t ctxt, int argc, char **
 grub_err_t ventoy_cmd_browser_diskfm(grub_extcmd_context_t ctxt, int argc, char **args)
 {
     char cfgfile[64];
+    char buf[64];
     browser_mbuf mbuf;
     
     (void)ctxt;
@@ -671,8 +672,7 @@ grub_err_t ventoy_cmd_browser_diskfm(grub_extcmd_context_t ctxt, int argc, char 
     grub_snprintf(cfgfile, sizeof(cfgfile), "configfile mem:0x%lx:size:%d", (ulong)mbuf.buf, mbuf.pos);
     grub_script_execute_sourcecode(cfgfile);
     
-    grub_snprintf(buf, sizeof(buf), "0x%lx", (ulong)fs);
-    grub_printf("ventoy_env_fm: fs addr = %s\n", buf);
+    grub_snprintf(buf, sizeof(buf), "0x%lx", (ulong)mbuf.buf);
     grub_env_set("bs", buf);
     grub_env_export("bs");
 
